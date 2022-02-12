@@ -1,0 +1,106 @@
+﻿@model Anushree.Models.stu
+@{
+    Layout = null;
+    var message = TempData["msg"] ?? string.Empty;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+
+<script>
+    var message = '@message';
+    if (message == "1")
+        alert("record save succesfully");
+    else if (message == "2")
+        alert("record already exits");
+
+    else if (message == "3")
+        alert("record updated");
+
+
+
+
+
+    function deletee(A)
+    {
+        
+            var result = confirm("Do u want to record a delete");
+            if (result) {
+                $.ajax({
+                    url: "@Url.Action("delete","Home")",
+                    type: 'post',
+                datatype: 'json',
+                asycs: false,
+                data: { sid: A },
+                success: function (isconfirm) {
+                    alert("your record is deleted"); location.reload();
+                }
+            });
+        }
+    
+    }
+   
+</script>
+<main>
+    @using (Html.BeginForm())
+
+    {
+        @Html.HiddenFor(m=>m.uid,new { @id="uid"})
+        <div>
+            <span><label>Student Name</label></span>
+            @Html.TextBoxFor(m => m.name, new { @id="Uname",@class="form-control",@required="required"})
+        </div>
+        <div>
+            <span><label>Student Class</label></span>
+            @Html.TextBoxFor(m => m.Class, new { @id = "Uclass", @class = "form-control", @required = "required" })
+        </div>
+        <div>
+            <span><label>Student Mobile</label></span>
+            @Html.TextBoxFor(m => m.mobile, new { @id = "Umobile", @class = "form-control", @required = "required" })
+        </div>
+        <div>
+            <span><label>Student Email</label></span>
+            @Html.TextBoxFor(m => m.email, new { @id = "Usemail", @class = "form-control", @required = "required" })
+        </div>
+        <div>
+            <input type="submit" name="Command" value="@ViewBag.ButtonName" />
+            <input type="reset"  />
+        </div>
+    }
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No.</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>ACTIONS</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{ var i = 0;}
+            @if(ViewBag.list!=null)
+            {
+                foreach(var item in ViewBag.list)
+                {
+                    <tr>
+                        <td>@(i=i+1)</td>
+                        <td>@(item.name)</td>
+                        <td>@(item.Class)</td>
+                        <td>@(item.mobile)</td>
+                        <td>@(item.email)</td>
+                        <td>
+                            <a title="edit" onclick="location.href(@Url.Action("edit","Home",new {id=@item.uid })">EDIT</a>
+                            <a title="Delete" onclick="deletee(@item.uid)" href="#">DELETE</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</main>
+
+
